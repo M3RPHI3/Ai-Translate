@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>ASLO</title>
+    <meta charset="UTF-8">
+
+    <style>
+        body{
+            font-family:Arial;
+            text-align:center;
+            background:#000000;
+        }
+
+        .box{
+            width:80%;
+            margin:auto;
+            background:rgb(3, 0, 0);
+            padding:20px;
+            border-radius:15px;
+        }
+
+        h1{
+            color:#ff8400;
+        }
+
+        #gesture{
+            font-size:40px;
+            font-weight:bold;
+            color:#a77028;
+        }
+
+        #speech{
+            font-size:30px;
+        }
+
+        button{
+            padding:10px 20px;
+            font-size:18px;
+        }
+    </style>
+</head>
+
+<body>
+
+<h1>🤟 ASLO</h1>
+
+<div class="box">
+
+<h2>Speech → Text</h2>
+
+<button onclick="startSpeech()">
+Start Speech
+</button>
+
+<p id="speech"></p>
+
+<hr>
+
+<h2>Sign → Text</h2>
+
+<p id="gesture">Waiting...</p>
+
+</div>
+
+<script>
+
+const SpeechRecognition =
+window.SpeechRecognition ||
+window.webkitSpeechRecognition;
+
+const recognition = new SpeechRecognition();
+
+recognition.lang = "th-TH";
+
+recognition.onresult = (event)=>{
+    document.getElementById("speech").innerText =
+    event.results[0][0].transcript;
+}
+
+function startSpeech(){
+    recognition.start();
+}
+
+setInterval(()=>{
+
+    fetch("/gesture")
+    .then(res=>res.json())
+    .then(data=>{
+
+        document.getElementById("gesture").innerText =
+        data.word;
+
+    });
+
+},500);
+
+</script>
+
+</body>
+</html>
